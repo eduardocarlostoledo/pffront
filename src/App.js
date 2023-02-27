@@ -14,6 +14,8 @@ import {CreateProducts} from "./components/CreateProduct";
 import { GetFiltersForEmail } from "./redux/actions/UsersActions";
 import { useEffect } from "react";
 import Cart from "./components/Cart";
+import axios from "axios";
+axios.defaults.baseURL = "https://pfback-production.up.railway.app"
 
 
 function App() {
