@@ -10,7 +10,7 @@ export default function Cart() {
     //const navigate = useNavigate();
    
     useEffect(() => {
-        fetch('http://localhost:3001/cart')
+        fetch('https://pfback-production.up.railway.app/cart')
         .then(response => response.json())
         .then(data => setCartItems(data))
         //.catch(error => navigate("/products"));        
@@ -32,7 +32,7 @@ export default function Cart() {
     function handleCheckout(e) {
         e.preventDefault();    
 
-        fetch("http://localhost:3001/pay/create_preference", {
+        fetch("https://pfback-production.up.railway.app/pay/create_preference", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export default function Cart() {
     }
 
     function deleteCart(prodId) {
-        fetch(`http://localhost:3001/cart/${prodId}`, {
+        fetch(`https://pfback-production.up.railway.app/cart/${prodId}`, {
         method: 'DELETE'
         })
         .then(response => {

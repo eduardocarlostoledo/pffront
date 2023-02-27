@@ -8,7 +8,7 @@ function AddToCart(item) {
     const handleSubmit = e => {
         e.preventDefault();
         const newItem = { name: item.name, image: item.image, price: item.price };
-        fetch('http://localhost:3001/cart', {
+        fetch('https://pfback-production.up.railway.app/cart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

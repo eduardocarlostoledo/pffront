@@ -49,7 +49,7 @@ export const createProduct = (product) => {
   return async (dispatch) => {
     console.log("/products", product);
     try {
-      const response = await fetch("/products", {
+      const response = await fetch("https://pfback-production.up.railway.app/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
