@@ -38,7 +38,7 @@ export const BuildPc = () => {
 
   const getDataFiltrado = (type) => {
     axios
-      .get(`http://localhost:3001/products`)
+      .get(`/products`)
       .then((response) => {
         setData([...response.data.filter((e) => e.type === type)])
         // console.log(response.data, "LA DATAAAA");
@@ -51,7 +51,7 @@ export const BuildPc = () => {
   const getDataBySocket = (socket) => {
     // console.log(socket, "ESTOY EN GET BY SOCKET");
     axios
-      .get(`http://localhost:3001/products/BuildSearch?socket=${socket}`)
+      .get(`/products/BuildSearch?socket=${socket}`)
       .then((response) => {
         setData([...response.data.filter((e) => e.type === type)]);
       })

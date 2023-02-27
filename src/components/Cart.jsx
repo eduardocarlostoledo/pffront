@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import mercadopago from "./mercadopago";
 import "../styles/Cart.css"
+//import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
 
 export default function Cart() {
 
     const [cartItems, setCartItems] = useState([]);
+    //const navigate = useNavigate();
    
     useEffect(() => {
         fetch('http://localhost:3001/cart')
         .then(response => response.json())
         .then(data => setCartItems(data))
-        .catch(error => console.log(error));
+        //.catch(error => navigate("/products"));        
+        .catch(error => swal('Carrito Vacio', "Carrito Vacio", 'error'));     
     }, []);
 
-    
     const price = cartItems.reduce((acc, item) => acc + (item.price * item.amount)  , 0)
     const total = price.toFixed(1)
-    const description = cartItems.map(e=>e.name)
-    const quantity = cartItems.reduce((acc, item) => acc + item.amount, 0);
+    const description = cartItems.map(e=>e.name);
+    const quantity = cartItems.reduce((acc, item) => acc + item.amount, 0);     
+
 
     const orderData = {
         quantity: 1,
@@ -81,9 +85,9 @@ export default function Cart() {
             
         <nav className='NavCart'>
             <ul className='ListDesordenada'>
-                {cartItems.map(item => (
+                {cartItems.length && cartItems.map(item => (
                 <li key={item.id}>
-                    {item.name} - ${item.price} - {item?.amount}
+                    {item?.name} - ${item?.price} - {item?.amount}
                 </li>
                 
                 ))}

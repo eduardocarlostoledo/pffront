@@ -25,7 +25,7 @@ export const getUserById = (id) => async (dispatch) => {
 
 export function userRegister(payload) { 
   return async function(dispatch){
-      const response = await axios.post(`http://localhost:3001/users/register/`,payload);
+      const response = await axios.post(`/users/register/`,payload);
       return response;
   };
 };
@@ -34,7 +34,7 @@ export function userRegister(payload) {
 
 export function userLogin(payload) { 
   return async function(dispatch){
-      const response = await axios.post(`http://localhost:3001/users/login/`,payload);
+      const response = await axios.post(`/users/login/`,payload);
       console.log(response.data);
       return response;
   };
@@ -43,7 +43,7 @@ export function userLogin(payload) {
 
 export function GetFiltersForEmail () { 
   return async function(dispatch){
-      let json = await axios.get(`http://localhost:3001/users`);
+      let json = await axios.get(`/users`);
       return dispatch({
           type: GET_EMAIL,
           payload: json.data
@@ -73,7 +73,7 @@ export function PutUser(payload) {
   localStorage.setItem("USUARIO", JSON.stringify(payload))
   console.log(payload.id, "asdaID");
   return async function(dispatch){
-      const response = await axios.put(`http://localhost:3001/users/${payload.id}`,payload);
+      const response = await axios.put(`/users/${payload.id}`,payload);
       return response;
   };
 };
