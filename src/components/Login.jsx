@@ -1,12 +1,13 @@
+import { useEffect } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styles from "../styles/Login.module.css";
 import { Link, useNavigate } from "react-router-dom"
-import { FcGoogle } from 'react-icons/fc';
 import { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { userLogin, UserActive, ChangeNav } from '../redux/actions/UsersActions';
+import { userLogin, UserActive, ChangeNav, postUsersGoogle, loginGoogle } from '../redux/actions/UsersActions';
 import swal from 'sweetalert';
+import jwt_decode from "jwt-decode";
 
 function validate(input) {
 
@@ -35,8 +36,7 @@ function validate(input) {
 
 
 export const Login = () => {
-    const regexPassword = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{8,20}$/
-    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    const [example, setExample] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errors, setErrors] = useState({})
@@ -46,6 +46,12 @@ export const Login = () => {
         password: "",
     });
 
+    const [infoGoogle, SetInfoGoogle] = useState({
+        email: "",
+        lastname: "",
+        name: "",
+        image: "",
+    })
 
     function handleChange(e) {
         setInput({
@@ -60,50 +66,151 @@ export const Login = () => {
 
 
 
+    
+//   useEffect(() => {
+//     const isAuthenticated = localStorage.getItem('isAuthenticated');
+//     if (isAuthenticated === "On") {
+//       navigate('/Profile');
+//     }
+//   }, [navigate]);
+
+
+    const viewAlert = async  () => {
+
+          let hola = await dispatch(postUsersGoogle(infoGoogle));
+          console.log(hola, "post");
+           const email = {
+            email : infoGoogle.email
+           }
+           console.log(email, "mail");
+           const usuario = await dispatch(loginGoogle(email))
+           console.log(usuario,  "usuario");
+
+           if (usuario.success) {
+            console.log(usuario.data.status, "status");  // ACA TENGO
+           
+            if (usuario.data.status) {
+
+                if (usuario.data.admin) {
+
+                    dispatch(UserActive(usuario))
+                    dispatch(ChangeNav())
+                    localStorage.setItem('isAuthenticated', "On");
+                    setTimeout( ()=> {
+                        navigate("/admin/users")
+                }, 800)
+
+                } else { 
+                    dispatch(UserActive(usuario))
+                    dispatch(ChangeNav())
+                    localStorage.setItem('isAuthenticated', "On");
+                    setTimeout( ()=> {
+                        navigate("/Profile")
+        
+                }, 800)
+                }
+            
+
+
+            } else { 
+                return swal("User Banned", "your account has been suspended", "error");
+            }
+    }
+
+  }
+
+     function HandleCallbackResponse(response) {
+        var userObject = jwt_decode(response.credential);  
+        SetInfoGoogle({ email: userObject.email,
+        lastname: userObject.family_name,
+        name: userObject.given_name,
+        image: userObject.picture
+        }
+        )     
+        swal({
+            title: "Iniciar sesion con mi cuenta de Google",
+            text: "Al iniciar sesion das permiso a de acceder a tus datos como nombre, correo e imagen de perfil",
+            icon: "warning",
+            buttons: ["No", "Si"]
+          }).then( (respuesta) => {
+          if(respuesta){
+            setExample(true)
+          }
+        })
+       
+    }
+
+    useEffect(() => {
+        /* global google */
+        google.accounts.id.initialize({
+            client_id: "816022596259-o6ktnr2grp3kpla75vn0f7n12o8nmej7.apps.googleusercontent.com",
+            callback: HandleCallbackResponse
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("signInDiv"),
+            { theme: "outline", size: "large" },
+        );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    
     async function handleSubmit(e) {
         e.preventDefault();
- 
         if (!input.password || !input.email) {
             return swal("Invalid", "Missing required fields!", "error");
         }
         else {
             const response = await dispatch(userLogin(input));
             if (response.data.success) {
-                dispatch(UserActive(response.data))
-                dispatch(ChangeNav())
-                setErrormsg(false)
-                setTimeout(() => {
-                    setInput({
-                        email: "",
-                        password: ""
-                    });
-                    navigate("/Profile")
-                }, 1300)
+                   
+                    if (response.data.data.status) {
 
+                        if (response.data.data.admin) { 
+                            dispatch(UserActive(response.data))
+                            dispatch(ChangeNav())
+                            localStorage.setItem('isAuthenticated', "On");
+                            setErrormsg(false)
+                            setTimeout(() => {
+                                setInput({
+                                    email: "",
+                                    password: ""
+                                });
+                                navigate("/admin/users")
+                            }, 1300)
+
+                        } else { 
+                            dispatch(UserActive(response.data))
+                            dispatch(ChangeNav())
+                            localStorage.setItem('isAuthenticated', "On");
+                            setErrormsg(false)
+                            setTimeout(() => {
+                                setInput({
+                                    email: "",
+                                    password: ""
+                                });
+                                navigate("/Profile")
+                            }, 1300)
+                        }
+
+                
+        
+
+                    } else { 
+                        return swal("User Banned", "your account has been suspended", "error");
+                    }
+               
             } else {
                 setErrormsg(true)
                 setTimeout(() => {
                     setErrormsg(false)
                 }, 5000)
                 return
-            }
+          }
 
         }
-
-        // if (input.email && input.email.length > 0 && input.email !== "") {
-        //     if (!regexEmail.test(input.email)) {
-        //         // return swal("Invalid","Email invalid", "error")
-        //         return setErrors(errors.password = "invalid pass")
-        //     }
-        //   }
-        //   if (input.password && input.password.length > 0 && input.password !== "") {
-        //     if (!regexPassword.test(input.password)) {
-        //         return setErrors(errors.password = "invalid pass")
-        //         // return swal("Invalid","Password invalid", "error")
-        //     }
-        //   }
-
     }
+
 
     return (
         <div className={styles.ContainerAllForm}>
@@ -114,30 +221,63 @@ export const Login = () => {
                 <Form.Group className={styles.pack} controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control name='email' onChange={e => handleChange(e)} value={input.email} className={styles.inputs} type="email" placeholder="Enter email" />
-                    {/* {(errors.email && input.email.length > 0) && (<p className={styles.spanError}>{errors.email}</p>)} */}
                 </Form.Group>
                 <Form.Group className={styles.pack} controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control className={styles.inputs} name='password' value={input.password} onChange={e => handleChange(e)} type="password" placeholder="Password" />
-                    {/* {(errors.password && input.password.length > 0) && (<p className={styles.spanError}>{errors.password}</p>)} */}
+                    <Form.Control className={styles.inputs} name='password' value={input.password} onChange={e => handleChange(e)} type="password" placeholder="Password" />      
                 </Form.Group>
                 {errormsg && <small className={styles.msgerr}>Password or email invalid</small>}
-                <div className={styles.containerBtn}> 
+                <div className={styles.containerBtn}>
                     <Button className={styles.btnR} type="submit">
                         Login
                     </Button>
                 </div>
-                <div className={styles.containerBtn}>
-                    <Button className={styles.btnR} type="submit">
-                        <FcGoogle className={styles.icon} />
-                        Continue with Google
-                    </Button>
+                <div style={{marginLeft: "150px", color: "rgb(0, 96, 151)", cursor: "pointer"}}>
+                   <Link to="/changePass">I forgot my password</Link> 
                 </div>
                 <div className={styles.down}>
                     <h5>Dont have an account? <Link to="/Register"><button className={styles.here}>Register</button></Link> </h5>
                 </div>
+                    <div className={styles.containerBtn}>
+                     {  !infoGoogle.name && !infoGoogle.email && !infoGoogle.lastname && <div id="signInDiv"></div>}
+                    {
+                   example && infoGoogle.name && infoGoogle.email && infoGoogle.lastname && <div onClick={viewAlert()}><strong>Ingresando...</strong></div>
+                 }
+                  </div>
             </Form>
         </div>
     )
 
 }
+
+
+// async function handleSubmit(e) {
+//     e.preventDefault();
+//     if (!input.password || !input.email) {
+//         return swal("Invalid", "Missing required fields!", "error");
+//     }
+//     else {
+//         const response = await dispatch(userLogin(input));
+//         if (response.data.success) {
+//             dispatch(UserActive(response.data))
+//             dispatch(ChangeNav())
+//             localStorage.setItem('isAuthenticated', "On");
+//             setErrormsg(false)
+//             setTimeout(() => {
+//                 setInput({
+//                     email: "",
+//                     password: ""
+//                 });
+//                 navigate("/Profile")
+//             }, 1300)
+
+//         } else {
+//             setErrormsg(true)
+//             setTimeout(() => {
+//                 setErrormsg(false)
+//             }, 5000)
+//             return
+//       }
+
+//     }
+//  }

@@ -2,30 +2,31 @@ import "../styles/Products.css";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useNavigate } from "react-redux";
 import { filterByBrands, filterByPrice, filterByType, getAllBrands, getAllProducts, getAllProductsName, getAllTypes } from "../redux/actions/ProductActions";
 import Card from '../components/Card'
 import {Marcas} from '../components/Marcas'
 import Paginado from "./Paginado";
 
 export const Products = () => {
-
     const dispatch = useDispatch()
     const product = useSelector((state) => state.products)
     const brand = useSelector((state) => state.brands)
     const type = useSelector((state) => state.types)
-
+    // const navigate = useNavigate();
+    
     useEffect(() => {
       dispatch(getAllProducts())
+      dispatch(getAllBrands())
+      dispatch(getAllTypes())
     },[dispatch]);
 
-    useEffect(() => {
-        dispatch(getAllBrands())
-    },[dispatch])
-
-    useEffect(() => {
-        dispatch(getAllTypes())
-    },[dispatch])
+    // useEffect(() => {
+    //     const isAuthenticated = localStorage.getItem('isAuthenticated');
+    //     if (isAuthenticated === "afuera") {
+    //       navigate('/login');
+    //     }
+    //   }, [navigate]);
 
     const [currentPage, setCurrentPage] = useState(1)
     const [charactersPerPage, ] = useState(9) //setCharactersPerPage
@@ -89,7 +90,6 @@ export const Products = () => {
                 <div className="DivCardsFilters">
                     <div className="DivFilter">
                         <h2>Filters</h2>
-                        <Marcas/>
                         <button className="Todos" onClick={(e) => handleClick(e)}>Reload all Products</button>
                         <div className="SearchButton" id="InputB">
                             <input className='InputB' type='text' placeholder="Search..." onChange={(e) => handleInputChange(e)}/> 

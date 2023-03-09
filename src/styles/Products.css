@@ -1,84 +1,31 @@
 
 .Products{
-    margin-top: 100px;
-}
-.Marcas{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    gap: 4px;
-    flex-wrap: wrap;
+    margin-top: 120px;
 }
 
-.MarcaContainer{
-    background-color: rgb(255, 255, 255);
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-}
-
-.MarcaContainer:hover{
-    background-color: #e7b8ff;
-}
 .DivCardsFilters {
     display: flex;
     flex-direction: row;
-    
 }
-
-@media screen and (max-width: 680px){
-    .DivCardsFilters{
-        flex-direction: column;
-        justify-content: center;
-    }
-    .CardContainer{
-        justify-content: center;
-    }
-    .DivFilter{
-        justify-content: center;
-    }
-}
-@media screen and (max-width: 480px){
-    .DivCardsFilters{
-        flex-direction: column;
-        justify-content: center;
-    }
-    .CardContainer{
-        justify-content: center;
-    }
-    .DivFilter{
-        justify-content: center;
-        transform: translateX(30px);
-    }
-}
-
 
 .DivFilter {
     padding: 20px;
     width: 300px;
-    height: 800px;
+    height: 500px;
     background-color: white;
-    margin-top: 100px;
     border-radius: 10px;
-    
+    margin-top: 40px;
     display: flex;
     justify-content: space-between;
     align-content: center;
     flex-direction: column;
     align-items: center;
     text-transform: uppercase;
-    margin-left: 20px;
+    margin-left: 40px;
     margin-right: 60px;
 }
 .CardContainer{
-    margin-top: 88px;
+    margin-top: -20px;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -86,7 +33,7 @@
 }
 
 .DivProducts{
-    margin-bottom: 280px;
+    margin-bottom: 230px;
 }
 
 .ContainerFilters{
@@ -187,3 +134,45 @@
 }
 
 
+@media screen and (max-width: 650px){
+    .DivCardsFilters{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .DivProducts{
+        margin-bottom: -130px;
+    }
+    .DivFilter{
+        justify-content: center;
+        width: 80%;
+        height: 240px; 
+        margin: 0;
+    }
+    .DivFilter h2{
+        display: none;
+    }
+    .searchButton {
+        margin: 0;
+    }
+    .Todos{
+        margin-bottom: 5px;
+    }
+    .ContainerFilters {
+        gap: 5px;
+        margin-bottom: 0;
+    }
+    .CardContainer{
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .DivAllCards{
+        width: 8.75rem;
+        margin: 0px;
+    }
+}

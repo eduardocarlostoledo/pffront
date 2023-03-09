@@ -6,16 +6,19 @@ export const UPDATE_USER="UPDATE_USER";
 export const GET_EMAIL="GET_EMAIL";
 export const USER_ACTIVE="USER_ACTIVE";
 export const CHANGE_NAV="CHANGE_NAV";
+export const GET_ID= "GET_ID";
+export const GET_ALL_QUERY= "GET_ALL_QUERY";
 
 
-export const getAllUsers = () => async (dispatch) => {
-    try {
-        return await axios('/users').then(r=>
-            dispatch({type: GET_ALL_USERS, payload:r.data.data}))
-    } catch (error) {
-            console.log(error)
-    }
-}
+export function getAllUsers () { 
+  return async function(dispatch){
+      let json = await axios.get("/users")
+      return dispatch({
+          type:  GET_ALL_USERS,
+          payload: json.data.data
+      });
+  };
+};
 
 export const getUserById = (id) => async (dispatch) => {
   return await axios(`/users/${id}`).then(r=>
@@ -52,6 +55,7 @@ export function GetFiltersForEmail () {
 };
 
 export function UserActive (payload) { 
+  console.log(payload, "paylo");
   return  function(dispatch){
       return dispatch({
           type: USER_ACTIVE,
@@ -70,12 +74,20 @@ export function ChangeNav () {
 
 
 export function PutUser(payload) { 
-  localStorage.setItem("USUARIO", JSON.stringify(payload))
-  console.log(payload.id, "asdaID");
+  // localStorage.setItem("USUARIO", JSON.stringify(payload))
+  // console.log(payload.id, "asdaID");
   return async function(dispatch){
       const response = await axios.put(`/users/${payload.id}`,payload);
       return response;
   };
+};
+
+export const PutUserProfile=(payload, id)=> async()=>{ 
+  const user=await axios.put(`/users/${id}`,payload);
+  const cacho=await axios.get(`/users/${id}`);
+  localStorage.setItem("USUARIO", JSON.stringify(cacho.data.data))
+  console.log(cacho.data.data, "USER PUT USER")
+  return user;
 };
 
 
@@ -87,3 +99,30 @@ export function deleteUserLocalStorage() {
       });
   };  
   }
+
+
+  export function postUsersGoogle(payload) { 
+    return async function(dispatch){
+        const response = await axios.post(`/users/google/`,payload);
+        return response;
+    };
+  };
+  
+
+  export function loginGoogle(payload) { 
+    return async function(dispatch){
+        let json  = await axios.post(`/users/loginGoogle`,payload);
+        return json.data
+    };
+  };
+  
+  export function getAllUsersName (name) { 
+    return async function(dispatch){
+        let json = await axios.get(`/users?name=${name}`)
+        return dispatch({
+            type:  GET_ALL_QUERY,
+            payload: json.data.data
+        });
+    };
+  };
+  

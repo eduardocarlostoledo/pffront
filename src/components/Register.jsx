@@ -1,5 +1,5 @@
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from "../styles/Register.module.css";
 import { Link, useNavigate } from 'react-router-dom';
@@ -49,7 +49,7 @@ function validate(input) {
         errors.password = "Max 20 caracteres";
     }
     
-    if (input.password.length < 5) {
+    if (input.password.length < 8) {
         errors.password = "Min 8 Caracteress, 1 Mayusc, 1 Minus";
     }
     if (input.passwordConfirm !== input.password) {
@@ -84,6 +84,14 @@ export const Register = () => {
         passwordConfirm: "",
     });
 
+
+    // useEffect(() => {
+    //     const isAuthenticated = localStorage.getItem('isAuthenticated');
+    //     if (isAuthenticated === "On") {
+    //       navigate('/Profile');
+    //     }
+    //   }, [navigate]);
+    
 
     function handleChange(e) {
         setInput({
@@ -123,7 +131,7 @@ export const Register = () => {
         
           if (input.password && input.password.length > 0 && input.password !== "") {
             if (!regexPassword.test(input.password)) {
-                return swal("Invalid","Password invalid", "error")
+                return swal("Invalid","Password invalid require 1May 1Min", "error")
             }
           }
 

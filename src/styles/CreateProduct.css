@@ -1,25 +1,30 @@
-
+html {
+    min-height: 100%;
+    position: relative;
+  }
+body {
+  margin: 0;
+  margin-bottom: 200px;
+}
 
 .container{ 
+    background-color: rgb(255, 255, 255);
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     align-content: flex-start;
-    width: 100%;
-    margin-top: 100px;
+    width: 800px;
+    margin-top: 80px;
+    padding-left: 50px;
+    border-radius: 15px;
+    margin-bottom: 160px;
 }
 
 
 
-.containerForm{
-    background-color: white;
-    user-select: none;
-    width: 600px;
-    height: 700px;
-    padding: 20px;
-    border-radius: 10px;
-}
+
 
 .title{
     color: black;
@@ -31,53 +36,59 @@
 
 .name{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: flex-start;
     align-content: center;
 }
 
 .nameLabel{
-    color: black;
-    font-size: 17px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 10px;
     margin-top: 10px;
-    
-    margin-left: 40px;
+    margin-left: 10px;
 }
 
 .input{
     width: 480px;
     height: 40px;
     border: none;
-    user-select: none;
-    border: 1px solid rgb(211, 211, 211);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #f7f7f7;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
     text-align: justify;
     margin-left: 40px;
     padding: 10px;
+    margin-bottom: 20px;
 }
 
 .input:focus{
-    color: rgb(50, 0, 50);
-    border-color: brown;
+    outline: none;
+    border-color: #0077ff;
 }
+
 
 .spanError{
     font-size: 12px;
     color: red;
-    margin-top: -20px;
-    transform: translateX(380px);
-    /* margin-top: 5px;
-    margin-bottom:5px ; */
+    margin-top: 10px;
+    margin-bottom:5px;
     position: absolute;
-    margin-left: 40px;
+    margin-left: 560px;
 }
 
 .nameLabelMap{
-    color: black;
-    font-size: 17px;
-    margin-left: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
     margin-top: 10px;
 }
 
@@ -85,24 +96,36 @@
     margin-top: 40px;
     width: 220px;
     height: 40px;
-    border: none;
-    color: black;
-    user-select: none;
-    border: 1px solid rgb(211, 211, 211);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #f7f7f7;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
     margin-bottom: 20px;
     padding: 10px;
+}
+
+.inputNew:focus{
+    outline: none;
+    border-color: #0077ff;
 }
 
 .selectName{
     margin-top: 40px;
     width: 220px;
     height: 40px;
-    border: none;
-    color: black;
-    user-select: none;
-    border: 1px solid rgb(211, 211, 211);
+    color: #333;
+    background-color: #f7f7f7;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+    border-radius: 5px;
     margin-bottom: 20px;
     padding: 10px;
+}
+.selectName:focus{
+    outline: none;
+    border-color: #0077ff;
 }
 .spanSError{
     font-size: 12px;
@@ -113,7 +136,7 @@
 }
 
 .buttonCrear{
-    width: 480px;
+    width: 680px;
     height: 40px;
     border: none;
     border-radius: 5px;
@@ -247,5 +270,4 @@
     }
     
 }
-
 

@@ -10,10 +10,20 @@ export const GET_PAGE = 'GET_PAGE';
 export const FILTER_BY_BRAND = 'FILTER_BY_BRAND';
 export const FILTER_BY_TYPE = 'FILTER_BY_TYPE';
 export const FILTER_PRECIO = 'FILTER_PRECIO';
+export const ADD_REVIEW = 'ADD_REVIEW';
 
 export const getAllProducts = () => async (dispatch) => {
     try {
         return await axios('/products').then(r=>
+            dispatch({type: GET_ALL_PRODUCTS, payload:r.data}))
+    } catch (error) {
+            console.log(error)
+    }
+}
+
+export const getAdminProducts = () => async (dispatch) => {
+    try {
+        return await axios('/products/ForAdmin').then(r=>
             dispatch({type: GET_ALL_PRODUCTS, payload:r.data}))
     } catch (error) {
             console.log(error)
@@ -29,66 +39,60 @@ export const getAllProductsName =(name)=>async (dispatch)=>{
   }
 }
 
+export const getAllProductsNameForAdmin = (name) => async (dispatch)=>{
+  try {
+    return await axios(`/products/ForAdmin?name=${name}`).then((r)=>
+      dispatch({type:GET_ALL_PRODUCTS_NAME, payload: r.data}))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const getProductDetail = (name) => async (dispatch) => {
   return await axios.get(`/products/${name}`).then(r=>
     dispatch({type: GET_PRODUCT_DETAIL, payload:{...r.data.data[0]}}))
 };
 
 
-// export const createProduct =  (payload)=> async()=>{
-//   return await axios.post("/products",payload)
-// };
-// export function createProduct(payload) { 
-//   return async function(dispatch){
-//       const response = await axios.post("/products",payload);
-//       return response;
+export const createProduct =  (payload)=> async(dispatch)=>{
+  return await axios.post("/products",payload).then(r=>
+  dispatch({type: CREATE_PRODUCT, payload}))
+};
+
+// export const createProduct = (product) => {
+//   return async (dispatch) => {
+//     console.log("/products", product);
+//     try {
+//       const response = await fetch("https://back-production-148d.up.railway.app/products", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(product),
+//       });
+
+//       console.log("CREATE_PRODUCT", response);
+//       const data = await response.json();
+//       dispatch({ type: "CREATE_PRODUCT", payload: data });
+
+//     } catch (error) {
+//       console.error(error);
+//     }
 //   };
 // };
 
-export const createProduct = (product) => {
-  return async (dispatch) => {
-    console.log("/products", product);
-    try {
-      const response = await fetch("https://pfback-production.up.railway.app/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
 
-      console.log("CREATE_PRODUCT", response);
-      const data = await response.json();
-      dispatch({ type: "CREATE_PRODUCT", payload: data });
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
+export const updateProduct= (id,payload)=> async()=>{
+    return await axios.put(`/products/${id}`,payload)
 };
 
 
-export const updateProduct= (payload)=> async()=>{
-    return await axios.put("/products",payload)
+export const banOrUnbanProd= (id)=> async()=>{
+    return await axios.put(`/products/ban/${id}`)
 };
 
-// export const getAllBrands = () => async (dispatch) => {
-//     try {
-//         return await axios.get('/products/brands').then(r=>
-//             dispatch({type: GET_ALL_BRANDS, payload:r.data.data}))
-//     } catch (error) {
-//             console.log(error)
-//     }
-// }
 
-// export const getAllTypes = () => async (dispatch) => {
-//     try {
-//         return await axios.get('/products/types').then(r=>
-//             dispatch({type: GET_ALL_TYPES, payload:r.data.data}))
-//     } catch (error) {
-//             console.log(error)
-//     }
-// }
+
 export const getAllBrands = () => {
   return async function(dispatch){
     const json = await axios.get('/products/brands')
@@ -129,4 +133,9 @@ export const filterByType = (payload) => {
 
 export const filterByPrice = (payload) => {
   return { type: FILTER_PRECIO, payload}
+}
+
+export const addReview=(id,payload) =>async(dispatch) => {
+  return await axios.put(`/products/review/${id}`,payload).then(r=>
+  dispatch({type: ADD_REVIEW, payload}))
 }
