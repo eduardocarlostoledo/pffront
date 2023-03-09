@@ -19,7 +19,7 @@ export const NavBar = () => {
   const up = useSelector((state) => state.update);
 
   const carts = useSelector((state) => state.cart);
-  const itemQuantity = carts?carts.reduce((acc, item) => acc + item.amount, 0) : 0;
+  const itemQuantity = carts.length > 0 ? carts.reduce((acc, item) => acc + item.amount, 0) : 0;
   // console.log(itemQuantity);
     // let Nav = useSelector((state) => state.ChangeNav);
     // let Nav = useSelector((state) => state.UserActive);
