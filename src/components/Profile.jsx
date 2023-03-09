@@ -6,25 +6,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Card from 'react-bootstrap/Card';
 import { IoSettingsOutline } from "react-icons/io5"
 import Form from 'react-bootstrap/Form';
-import { PutUserProfile, deleteUserLocalStorage, getAllUsers, UserActive } from '../redux/actions/UsersActions';
-import { getUpdate, update  } from '../redux/actions/CartActions';
+import { PutUser, deleteUserLocalStorage, getAllUsers, UserActive } from '../redux/actions/UsersActions';
 import swal from 'sweetalert';
 import { useNavigate, Link  } from "react-router-dom"
 import { BsSendDash } from "react-icons/bs"
 
 export default function Profile() {
-  const dispatch = useDispatch()
-  const up = useSelector(state => state.update)
-  const userActive = JSON.parse(localStorage.getItem("USUARIO")) || []
+
   useEffect(() => {
-    dispatch(getUpdate());    
     dispatch(getAllUsers());
-    dispatch(update(false));
-  }, [up])
+  }, [])
+
   const [country, setCountrie] = useState({})
 
   useEffect(() => {
-    fetch(`https://back-production-148d.up.railway.app/order`)
+    fetch(`http://localhost:3001/order`)
       .then((res) => res.json())
       .then((data) => {
         setCountrie(data);
@@ -46,12 +42,15 @@ console.log(country, "count");
   // }, [navigate]);
 
 
+
+  const userActive = JSON.parse(localStorage.getItem("USUARIO")) || []
   // const userActive = useSelector((state) => state.userActive)
   const [Panel, setPanel] = useState(true);
+  const dispatch = useDispatch()
 
   
   const [input, setInput] = useState({
-    image: userActive.image ? userActive.image.secure_url : "",
+    image: userActive.image ? userActive.image : "",
     city: userActive.city ? userActive.city : "",
     id: userActive.id ,
     phonenumber: userActive.phonenumber ? userActive.phonenumber : "",
@@ -67,9 +66,6 @@ console.log(country, "count");
       [e.target.name]: e.target.value
     });
   };
-  const handleChangeImage =(e) => {
-    setInput({ ...input, image: e.target.files[0]})
-  }
 
   function CerrarSes(e) {
     e.preventDefault();
@@ -98,30 +94,24 @@ console.log(country, "count");
 
   function handleSubmit(e) {
     e.preventDefault();
-    
-    // if (input.email === "") input.email = userActive.email
-    // if (input.password === "") input.password = userActive.password
-    // if (input.passwordConfirm === "") input.passwordConfirm = userActive.passwordConfirm
-    // if (input.phonenumber === "") input.phonenumber = userActive.phonenumber
-    // if (input.country === "") input.country = userActive.country
-    // if (input.image === "") input.image = userActive.image
-    // if (input.city === "") input.city = userActive.city
-    const data = new FormData();
-    Object.keys(input).forEach((key) => data.append(key, input[key]));
-    dispatch(PutUserProfile(data, input.id))
-    dispatch(update(true));
-    // dispatch(PutUser({
-    //   ...input, name: userActive.name,
-    //   lastname: userActive.lastname,
-    //   status: userActive.status, 
-    //   admin: userActive.admin
-    // }));
+    if (input.email === "") input.email = userActive.email
+    if (input.password === "") input.password = userActive.password
+    if (input.passwordConfirm === "") input.passwordConfirm = userActive.passwordConfirm
+    if (input.phonenumber === "") input.phonenumber = userActive.phonenumber
+    if (input.country === "") input.country = userActive.country
+    if (input.image === "") input.image = userActive.image
+    if (input.city === "") input.city = userActive.city
+    dispatch(PutUser({
+      ...input, name: userActive.name,
+      lastname: userActive.lastname,
+      status: userActive.status, 
+      admin: userActive.admin
+    }));
     swal("success", 'User modified successfully', "success")
     setInput({
       ...input
     });
     setPanel(true)
-    
   }
 
 
@@ -130,14 +120,14 @@ console.log(country, "count");
      {!JSON.parse(localStorage.getItem("Navbar")) ? <div className="Container">
         <div className="izquierda">
           <div className="containerImg">
-            <Card.Img className="ImagenProfile" variant="top" src={userActive.image ? userActive.image.secure_url : "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"} />
+            <Card.Img className="ImagenProfile" variant="top" src={userActive.image ? userActive.image : "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"} />
           </div>
           <div className="InfoUser">
             <div className="InfoUser-Name">
               <h3>{userActive.name} {userActive.admin ? <span style={{ color: "green", fontSize: "11px", border: "0.01rem solid green", padding: "2px", borderRadius: "6px"}}>admin</span> : ""}</h3>
             </div>
             <div>
-              <FaCity className="icono"></FaCity><span>{userActive.city ? userActive.city : "Ciudad"}, Argentina</ span>
+              <FaCity className="icono"></FaCity><span>{userActive.city ? userActive.city : "Ciudad"}, {userActive.country ? userActive.country : "Pais"}</ span>
             </div>
             <div>
               <FaPhone className="icono"></FaPhone><span>{userActive.phonenumber ? userActive.phonenumber : "+54 9 11 2222 5555"}</span>
@@ -155,7 +145,7 @@ console.log(country, "count");
             <button onClick={() => setPanel(false)} className="hola"><IoSettingsOutline className="setting"></IoSettingsOutline></button>
           </div>
           <h3><a href="https://login.live.com/" target="_blank" rel="noopener noreferrer">{userActive.email}</a></h3>
-          <h4>Address: {userActive.address ? userActive.address : "Street 151515"}</h4>
+          <h4>Direccion: {userActive.address ? userActive.address : "Street 151515"}</h4>
         { 
        userActive.admin ? <div style={{marginTop: "15px"}}>
               <div>
@@ -164,7 +154,7 @@ console.log(country, "count");
           </div>
         :
           <div style={{marginTop: "15px"}}>
-             <h3><strong>My orders</strong></h3>
+             <h3><strong>Mis Ordenes</strong></h3>
              {country.length > 0 && country?.map((e, index) => {
                     if(e.buyer_email === userActive.email ) {
                        return (<h6 key={index}>Products: {e.product_description} <br/> Total price {e.total_order_price} $ <span style={{color: "green", fontSize: "11px", border: "0.01rem solid green", padding: "2px", borderRadius: "6px"}}>{e.statusId}</span><hr/></h6>)
@@ -233,7 +223,7 @@ console.log(country, "count");
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="Imagen">
                   <Form.Label>Imagen URL</Form.Label>
-                  <Form.Control name='image' onChange={e => handleChangeImage(e)} className="inputs" type="file" placeholder="Enter URL image" />
+                  <Form.Control name='image' value={input.image} onChange={e => handleChange(e)} className="inputs" type="text" placeholder="Enter URL image" />
                 </Form.Group>
               </div>
               <div className="sopapa">

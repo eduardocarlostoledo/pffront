@@ -34,8 +34,7 @@
 }
 
 .ContenedorImg { 
-    width: 300px;
-    margin-right: 50px;
+    width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -48,7 +48,7 @@ export const AdminUsers = () => {
 
 
   useEffect(() => {
-    fetch(`https://back-production-148d.up.railway.app/order`)
+    fetch(`http://localhost:3001/order`)
       .then((res) => res.json())
       .then((data) => {
         setCountrie(data);
@@ -185,6 +185,8 @@ export const AdminUsers = () => {
     {
       title: "Nombre",
       dataIndex: "name",
+      sorter: (a, b) => a.name - b.name,
+      defaultSortOrder: "descend",
       render: (text) => <p>{text}</p>,
     },
     {
@@ -237,6 +239,9 @@ export const AdminUsers = () => {
       dataIndex: "",
       render: (value) => (
         <div>
+          <button className={styles.btnIcons} onClick={() => console.log(value)}>
+            <AiFillSetting className={styles.llave} />
+          </button>
 
         {value.status ? <button className={styles.btnIcons}  onClick={() => setStatus(value)} >
             <FaBan className={styles.banned}/>

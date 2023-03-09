@@ -41,7 +41,7 @@ export const BuildPc = () => {
 
   const getDataFiltrado = (type) => {
     axios
-      .get(`/products`)
+      .get(`http://localhost:3001/products`)
       .then((response) => {
         setData([...response.data.filter((e) => e.type === type)]);
       })
@@ -52,7 +52,7 @@ export const BuildPc = () => {
 
   const getDataBySocket = (socket) => {
     axios
-      .get(`/products/BuildSearch?socket=${socket}`)
+      .get(`http://localhost:3001/products/BuildSearch?socket=${socket}`)
       .then((response) => {
         setData([...response.data.filter((e) => e.type === type)]);
       })
@@ -134,7 +134,7 @@ export const BuildPc = () => {
 
   const handleAddCart = (item) => {
     const newItem = { name: item.name, image: item.image, price: item.price };
-    fetch("https://back-production-148d.up.railway.app/cart", {
+    fetch("http://localhost:3001/cart", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

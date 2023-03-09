@@ -8,35 +8,35 @@ export const ORDER_BY_EMAIL = 'ORDER_BY_EMAIL'
 
 export const addAllOrders = () => {
     return async function(dispatch){
-        const json = await axios.get('/order')
+        const json = await axios.get('http://localhost:3001/order')
         return dispatch({type: ADD_ALL_ORDERS, payload: json.data})
     }
 }
 
 export const getAllShopping = () => {
     return async function(dispatch){
-        const buys = await axios.get('/order/pays')
+        const buys = await axios.get('http://localhost:3001/order/pays')
         return dispatch({type: GET_ALL_SHOPPING, payload: buys.data})
     }
 }
 
 export const orderById = (id) => {
     return async function (dispatch){
-        const idOrder = await axios.get(`/order/${id}`)
+        const idOrder = await axios.get(`http://localhost:3001/order/${id}`)
         return dispatch({type: ORDER_BY_ID, payload: idOrder.data})
     }
 }
 
 export const orderByUser = (cartUserId) => {
     return async function (dispatch) {
-        const orderUser = await axios.get(`/order/${cartUserId}`)
+        const orderUser = await axios.get(`http://localhost:3001/order/${cartUserId}`)
         return dispatch({type: ORDER_BY_USER, payload: orderUser.data})
     }
 }
 
 export const orderByEmail = (email) => {
     return async function (dispatch){
-        const ideEmail = await axios.get(`/order/${email}`)
+        const ideEmail = await axios.get(`http://localhost:3001/order/${email}`)
         return dispatch({type: ORDER_BY_EMAIL, payload: ideEmail.data})
     }
 }
